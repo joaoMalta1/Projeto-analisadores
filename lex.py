@@ -32,13 +32,13 @@ reserved = {
     'alerta': 'ALERTA',
     'para': 'PARA',
     'todos': 'TODOS',
-    'TRUE': 'TRUE',
-    'FALSE': 'FALSE',
+    'TRUE': 'BOOL',
+    'FALSE': 'BOOL',
 }
 
 tokens += list(reserved.values())
 
-# Expressões regulares para os símbolos
+# Regex
 t_MAIOR       = r'>'
 t_MENOR       = r'<'
 t_MAIORIGUAL  = r'>='
@@ -57,13 +57,13 @@ t_PONTO       = r'\.'
 
 t_ignore = ' \t'
 
-# Regras para tokens específicos
+# Regras
 def t_STRING(t):
-    r'"[^"]*"'
-    t.value = t.value[1:-1]
+    r'"[^"]+"' 
+    t.value = t.value[1:-1] #tira aspas
     return t
 
-def t_NUM(t):
+def t_NUM(t): #só pode aceitar positivo
     r'\d+'
     t.value = int(t.value)
     return t
@@ -71,12 +71,23 @@ def t_NUM(t):
 def t_BOOL(t):
     r'TRUE|FALSE'
     t.type = reserved.get(t.value, 'BOOL')
-    t.value = True if t.value == 'TRUE' else False
+    t.value = (t.value == 'TRUE' )
     return t
 
 def t_NAMEDEVICE(t):
-    r'[A-Za-z_][A-Za-z0-9_]*' #comeca com letra e dps pode ter letra e numero 
-    t.type = reserved.get(t.value, 'NAMEDEVICE')  # se for palavra reservada, substitui
+    r'[A-Za-z]+'
+    if t.value in reserved:
+        t.type = reserved[t.value]
+    else:
+        t.type = 'NAMEDEVICE'
+    return t
+
+def t_OBSERVATION(t):
+    r'[A-Za-z][A-Za-z0-9]*'
+    if t.value in reserved:
+        t.type = reserved[t.value]
+    else:
+        t.type = 'OBSERVATION'
     return t
 
 def t_newline(t):
