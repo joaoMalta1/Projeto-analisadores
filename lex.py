@@ -1,3 +1,5 @@
+#Nome: Joao Malta e Stella Maranhao
+
 import ply.lex as lex
 
 # Lista de tokens
@@ -72,7 +74,18 @@ def t_BOOL(t):
     t.value = True if t.value == 'TRUE' else False
     return t
 
+def t_NAMEDEVICE(t):
+    r'[A-Za-z_][A-Za-z0-9_]*' #comeca com letra e dps pode ter letra e numero 
+    t.type = reserved.get(t.value, 'NAMEDEVICE')  # se for palavra reservada, substitui
+    return t
 
+def t_newline(t):
+    r'\n+'
+    t.lexer.lineno += len(t.value)
+
+def t_error(t):
+    print(f"Caractere inválido: {t.value[0]}")
+    t.lexer.skip(1)
 
 # Inicializa o analisador léxico
 lexer = lex.lex()
