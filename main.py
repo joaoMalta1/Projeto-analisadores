@@ -1,18 +1,9 @@
-from lex import lexer
-import re
+from parser import parser
 
 codigo = '''
-dispositivo: {Termometro, temperatura}
+dispositivo: {Ventilador, temperatura}
 set temperatura = 40.
-se temperatura > 30 entao ligar Termometro.
+se temperatura > 30 entao ligar Ventilador.
 '''
 
-lexer.input(codigo)
-
-for token in lexer:
-    print(token)
-
-# texto = ""
-
-# matches = re.findall(r'"[^"]+"', texto)
-# print(matches)  # ['"abc"', '"123"']
+parser.parse(codigo)
