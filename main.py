@@ -34,13 +34,13 @@ def main():
         print("erro de sintaxe")
         sys.exit(1)
 
-    #escrever o codigo .c
+    #escreve o codigo .c
     try:
         with io.open(output, 'w', encoding='utf-8') as f:
             f.write(resultado)
         print(f"{output} gerado com sucesso em ")
     except Exception as e:
-        print(f"erro ao gerar {e}")
+        print(f"erro:{e} ao gerar arquivo .c")
         sys.exit(1)
 
 if __name__ == '__main__':
