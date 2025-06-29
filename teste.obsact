@@ -1,0 +1,3 @@
+dispositivo: {Ventilador, temperatura}
+set temperatura = 40.
+se temperatura > 30 entao ligar Ventilador.
