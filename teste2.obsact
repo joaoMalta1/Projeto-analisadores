@@ -1,0 +1,3 @@
+dispositivo : {lampada, luminosidade}
+set luminosidade = 70.
+se luminosidade < 50 entao ligar lampada senao desligar lampada.

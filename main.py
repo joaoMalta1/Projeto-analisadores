@@ -1,46 +1,52 @@
+from lex import lexer
 from parser import parser
 import sys
 import io
-from lex import lexer
-from parser import parser, dispositivos, variaveis, codigo_gerado
 
+# --- função auxiliar para “achatar” listas ---
+def flatten(lst):
+    flat = []
+    for item in lst:
+        if isinstance(item, list):
+            flat.extend(flatten(item))
+        elif item != '':
+            flat.append(item)
+    return flat
 
 def main():
     if len(sys.argv) != 3:
-        print("python main.py: input.obsact  e gera saida.c\n")
+        print("Uso: python main.py entrada.obsact saida.c")
         sys.exit(1)
 
-    input = sys.argv[1]
-    output = sys.argv[2]
+    input_file = sys.argv[1]
+    output_file = sys.argv[2]
 
     try:
-        with io.open(input, 'r', encoding='utf-8-sig') as f:
-            codigo = f.read()
+        with io.open(input_file, 'r', encoding='utf-8-sig') as f:
+            code = f.read()
     except UnicodeDecodeError:
-        print(f" erro ao ler '{input}' (use UTF-8).")
+        print(f"Erro ao ler '{input_file}' (use UTF-8).")
         sys.exit(1)
 
-    #tira \t\n e outros caracteres do começo 
-    codigo = codigo.lstrip()
+    code = code.lstrip()
 
-    #limpa as listas antes de gerar o novo codigo
-    dispositivos.clear()
-    variaveis.clear()
-    codigo_gerado.clear()
+    # Parse e recupera o código gerado
+    resultado = parser.parse(code, lexer=lexer)
 
-    #parser
-    resultado = parser.parse(codigo, lexer=lexer)
     if resultado is None:
-        print("erro de sintaxe")
+        print("Erro de sintaxe")
         sys.exit(1)
 
-    #escreve o codigo .c
+    # Achata o resultado (caso tenha listas dentro)
+    resultado_flat = flatten(resultado)
+
     try:
-        with io.open(output, 'w', encoding='utf-8') as f:
-            f.write(resultado)
-        print(f"{output} gerado com sucesso em ")
+        with io.open(output_file, 'w', encoding='utf-8') as f:
+            for line in resultado_flat:
+                f.write(line + '\n')
+        print(f"{output_file} gerado com sucesso!")
     except Exception as e:
-        print(f"erro:{e} ao gerar arquivo .c")
+        print(f"Erro: {e} ao gerar arquivo .c")
         sys.exit(1)
 
 if __name__ == '__main__':

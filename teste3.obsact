@@ -1,0 +1,5 @@
+dispositivo : {alarme, movimento}
+dispositivo : {sensor, luz}
+set movimento = 1.
+set luz = 20.
+se movimento == 1 && luz < 30 entao ligar alarme.

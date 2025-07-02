@@ -1,0 +1,5 @@
+dispositivo : {sirene, ruido}
+dispositivo : {cortina, luz}
+set ruido = 85.
+set luz = 10.
+se ruido > 80 && luz < 20 entao ligar sirene senao desligar cortina.
